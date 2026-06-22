@@ -1,16 +1,16 @@
-// src/task/infrastructure/controllers/GetCompleteTaskController.ts
+// src/task/infrastructure/controllers/GetActiveTaskController.ts
 
 import type { Request, Response } from "express";
-import type { GetCompleteTask } from "../../aplication/use_cases/GetCompleteTask.js";
+import type { GetActiveTask } from "../../aplication/use_cases/GetActiveTask.js";
 
-export class GetCompleteTaskController {
+export class GetActiveTaskController {
   // El controlador necesita el Caso de Uso específico para trabajar
-  constructor(private getCompleteTaskUseCase: GetCompleteTask) {}
+  constructor(private getActiveTaskUseCase: GetActiveTask) {}
   async handle(req: Request, res: Response): Promise<void> {
     try {
       // Ejecutamos el caso de uso pasándole todos los parámetros
       // Nota: Tu caso de uso también tendrá que aceptar estos argumentos extra
-      const tasks = await this.getCompleteTaskUseCase.execute();
+      const tasks = await this.getActiveTaskUseCase.execute();
 
       res.status(200).json({
         success: true,

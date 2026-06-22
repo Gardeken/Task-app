@@ -1,8 +1,8 @@
-// src/task/application/use-cases/GetCompleteTask.ts
+// src/task/application/use-cases/GetActiveTask.ts
 import { Task } from "../../domain/entities/task.js";
 import { type TaskRepository } from "../../domain/ports/TaskRepository.js";
 
-export class GetCompleteTask {
+export class GetActiveTask {
   // Pedimos el repositorio, pero no sabemos cuál implementación real llegará
   constructor(private taskRepository: TaskRepository) {}
 

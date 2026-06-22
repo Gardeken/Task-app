@@ -87,13 +87,25 @@ export class SupabaseTaskRepository implements TaskRepository {
   // 5. Marcar una tarea como completada por su ID
   // Nota: Esto en Supabase se traduce en un .update({ is_completed: true }).eq('id', id)
   async complete(id: string): Promise<void> {
-    // Lógica para actualizar en Supabase
-    const { error } = await supabase
+    // 1. Buscamos el estado actual de la tarea
+    const { data: task, error: fetchError } = await supabase
       .from("tasks")
-      .update({ is_completed: true })
+      .select("is_completed")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !task) {
+      throw new Error(`Task not found: ${fetchError?.message}`);
+    }
+
+    // 2. Actualizamos con el valor exactamente opuesto (!)
+    const { error: updateError } = await supabase
+      .from("tasks")
+      .update({ is_completed: !task.is_completed }) // Cambia true a false, y viceversa
       .eq("id", id);
-    if (error) {
-      throw new Error(`Error completing task: ${error.message}`);
+
+    if (updateError) {
+      throw new Error(`Error toggling task status: updateError.message`);
     }
   }
 

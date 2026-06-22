@@ -12,8 +12,8 @@ import { RestoreTask } from "../aplication/use_cases/RestoreTask.js";
 import { RestoreTaskController } from "./controllers/RestoreTaskController.js";
 import { GetDeleteTaskController } from "./controllers/GetDeleteTaskController.js";
 import { GetDeleteTask } from "../aplication/use_cases/GetDeleteTask.js";
-import { GetCompleteTask } from "../aplication/use_cases/GetCompleteTask.js";
-import { GetCompleteTaskController } from "./controllers/GetCompleteTaskController.js";
+import { GetActiveTask } from "../aplication/use_cases/GetActiveTask.js";
+import { GetActiveTaskController } from "./controllers/GetActiveTaskController.js";
 import { GetTaskController } from "./controllers/GetTaskController.js";
 import { GetTask } from "../aplication/use_cases/GetTask.js";
 import { CompleteTask } from "../aplication/use_cases/CompleteTask.js";
@@ -31,7 +31,7 @@ const createTaskUseCase = new CreateTask(taskRepository);
 const getAllTaskUseCase = new GetAllTask(taskRepository);
 const getTaskUseCase = new GetTask(taskRepository);
 const getDeleteTaskUseCase = new GetDeleteTask(taskRepository);
-const getCompleteTaskUseCase = new GetCompleteTask(taskRepository);
+const getActiveTaskUseCase = new GetActiveTask(taskRepository);
 const deleteTaskUseCase = new DeleteTask(taskRepository);
 const restoreTaskUseCase = new RestoreTask(taskRepository);
 const completeTaskUseCase = new CompleteTask(taskRepository);
@@ -44,8 +44,8 @@ const getAllTaskController = new GetAllTaskController(getAllTaskUseCase);
 const getDeleteTaskController = new GetDeleteTaskController(
   getDeleteTaskUseCase,
 );
-const getCompleteTaskController = new GetCompleteTaskController(
-  getCompleteTaskUseCase,
+const getActiveTaskController = new GetActiveTaskController(
+  getActiveTaskUseCase,
 );
 const deleteTaskController = new DeleteTaskController(deleteTaskUseCase);
 const restoreTaskController = new RestoreTaskController(restoreTaskUseCase);
@@ -57,8 +57,8 @@ taskRouter.get("/tasks", (req, res) => getAllTaskController.handle(req, res));
 taskRouter.get("/tasks/deleted", (req, res) =>
   getDeleteTaskController.handle(req, res),
 );
-taskRouter.get("/tasks/completed", (req, res) =>
-  getCompleteTaskController.handle(req, res),
+taskRouter.get("/tasks/active", (req, res) =>
+  getActiveTaskController.handle(req, res),
 );
 taskRouter.put("/tasks/reorder", (req, res) =>
   reorderTaskController.handle(req, res),
