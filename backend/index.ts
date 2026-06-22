@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // Permite únicamente a tu Front de Vite
+    origin: process.env.FRONTEND_URL, // Permite únicamente a tu Front de Vite
     methods: ["GET", "POST", "PUT", "DELETE"], // Métodos permitidos
     allowedHeaders: ["Content-Type", "Authorization"], // Headers permitidos
   }),
