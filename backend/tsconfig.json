@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    // Target & Module (Perfecto para Node.js actual)
+    "module": "nodenext",
+    "target": "esnext",
+    "types": ["node"], // Agregamos tipos de Node para evitar problemas con process.env, etc.
+
+    // 📂 CONFIGURACIÓN DE SALIDA (Descomentadas y corregidas)
+    "outDir": "./dist",
+
+    // Otros Outputs (Los dejamos activos, pero ahora se irán ordenados a /dist)
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+
+    // Opciones Estrictas y Recomendadas (Las tuyas que están geniales)
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "jsx": "react-jsx",
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
+    "noUncheckedSideEffectImports": true,
+    "moduleDetection": "force",
+    "skipLibCheck": true
+  },
+
+  // 🎯 Especificamos qué carpetas debe procesar en la raíz
+  "include": [
+    "aplication/**/*",
+    "domain/**/*",
+    "infrastructure/**/*",
+    "index.ts"
+  ],
+
+  // ⛔ Le prohibimos compilar lo que ya está listo o las dependencias
+  "exclude": ["node_modules", "dist"]
+}
