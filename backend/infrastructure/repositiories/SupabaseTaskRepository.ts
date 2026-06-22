@@ -51,7 +51,10 @@ export class SupabaseTaskRepository implements TaskRepository {
 
   // 3. Obtener todas las tareas guardadas (sin importar su estado)
   async findAll(): Promise<Task[]> {
-    const { data, error } = await supabase.from("tasks").select("*");
+    const { data, error } = await supabase
+      .from("tasks")
+      .select("*")
+      .order("position", { ascending: true });
     if (error) {
       throw new Error(`Error fetching tasks: ${error.message}`);
     }
@@ -100,7 +103,8 @@ export class SupabaseTaskRepository implements TaskRepository {
     const { data, error } = await supabase
       .from("tasks")
       .select("*")
-      .eq("deleted", true);
+      .eq("deleted", true)
+      .order("position", { ascending: true });
     if (error) {
       throw new Error(`Error fetching deleted tasks: ${error.message}`);
     }
@@ -124,7 +128,8 @@ export class SupabaseTaskRepository implements TaskRepository {
     const { data, error } = await supabase
       .from("tasks")
       .select("*")
-      .eq("deleted", false);
+      .eq("deleted", false)
+      .order("position", { ascending: true });
     if (error) {
       throw new Error(`Error fetching active tasks: ${error.message}`);
     }
@@ -151,6 +156,28 @@ export class SupabaseTaskRepository implements TaskRepository {
       .eq("id", id);
     if (error) {
       throw new Error(`Error restoring task: ${error.message}`);
+    }
+  }
+
+  // 9. Reordenar tareas (actualizar la posición de una tarea)
+  async reorder(orderedIds: string[]): Promise<void> {
+    if (!orderedIds || orderedIds.length === 0) {
+      throw new Error("No se proporcionaron IDs para reordenar.");
+    }
+
+    // 1. Preparamos un único array de objetos con los datos mínimos a actualizar
+    const payload = orderedIds.map((id, index) => ({
+      id: id, // Clave primaria para que Supabase sepa a qué fila aplicar el cambio
+      position: index + 1, // Nueva posición correlativa
+    }));
+
+    // 2. 🚀 Una sola petición de red con todo el lote de datos
+    const { error } = await supabase.from("tasks").upsert(payload); // Al pasarle un array, ejecuta un único comando masivo en Postgres
+
+    if (error) {
+      throw new Error(
+        `Error reordering tasks via bulk upsert: ${error.message}`,
+      );
     }
   }
 }

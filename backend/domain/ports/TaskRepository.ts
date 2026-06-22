@@ -25,4 +25,7 @@ export interface TaskRepository {
 
   //8. Restaurar una tarea eliminada por su ID (marcarla como no eliminada)
   restore(id: string): Promise<void>;
+
+  //9. Reordenar tareas (actualizar la posición de una tarea)
+  reorder(orderedIds: string[]): Promise<void>;
 }

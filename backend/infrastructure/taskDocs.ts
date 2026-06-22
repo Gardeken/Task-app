@@ -12,7 +12,17 @@ export const taskSwaggerDocs = {
             example: "7a4c3632-bbe8-46e5-b9e4-8d6e2fb1a3da",
           },
           title: { type: "string", example: "Aprender Arquitectura Hexagonal" },
+          description: {
+            type: "string",
+            example: "Estructurar capas independientes y desacopladas.",
+          },
           isCompleted: { type: "boolean", example: false },
+          position: {
+            type: "integer",
+            example: 1,
+            description:
+              "Índice numérico correlativo que define el orden de la tarea.",
+          },
           createdAt: {
             type: "string",
             format: "date-time",
@@ -51,6 +61,10 @@ export const taskSwaggerDocs = {
                 required: ["title"],
                 properties: {
                   title: { type: "string", example: "Comprar pan" },
+                  description: {
+                    type: "string",
+                    example: "Pasar por la panadería del centro.",
+                  },
                 },
               },
             },
@@ -58,7 +72,8 @@ export const taskSwaggerDocs = {
         },
         responses: {
           201: {
-            description: "Tarea creada",
+            description:
+              "Tarea creada (Asigna posición 1 automáticamente a través del Trigger)",
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/TaskResponse" },
@@ -77,10 +92,12 @@ export const taskSwaggerDocs = {
       },
       get: {
         summary: "Obtener todas las tareas activas",
+        notes:
+          "Devuelve las tareas ordenadas de forma ascendente por su posición.",
         tags: ["Tasks"],
         responses: {
           200: {
-            description: "Lista de tareas obtenida",
+            description: "Lista de tareas obtenida en orden secuencial",
             content: {
               "application/json": {
                 schema: {
@@ -93,6 +110,76 @@ export const taskSwaggerDocs = {
                     },
                   },
                 },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/tasks/reorder": {
+      put: {
+        summary: "Actualizar el orden posicional de las tareas (Drag and Drop)",
+        tags: ["Tasks"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                required: ["orderedIds"],
+                properties: {
+                  orderedIds: {
+                    type: "array",
+                    description:
+                      "Lista ordenada de UUIDs que dictaminan la nueva secuencia posicional.",
+                    items: {
+                      type: "string",
+                      format: "uuid",
+                    },
+                    example: [
+                      "7a4c3632-bbe8-46e5-b9e4-8d6e2fb1a3da",
+                      "bdd4134b-781d-45d4-bd73-d24ba1757a47",
+                      "94f0d681-15b1-4866-884b-1d453f3b0f88",
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description:
+              "El orden de las tareas se actualizó correctamente mediante la función RPC.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: { type: "boolean", example: true },
+                    message: {
+                      type: "string",
+                      example: "Orden actualizado correctamente",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          400: {
+            description: "Payload malformado o faltante",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+              },
+            },
+          },
+          500: {
+            description:
+              "Error interno procesando el reordenamiento en Supabase",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
               },
             },
           },

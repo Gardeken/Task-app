@@ -5,6 +5,7 @@ export class Task {
   public is_completed: boolean;
   public created_at: string | undefined;
   public deleted: boolean = false; // Nueva propiedad para marcar como eliminada
+  public position?: number | undefined; // Nueva propiedad para el orden de las tareas
 
   constructor(
     title: string,
@@ -13,6 +14,7 @@ export class Task {
     isCompleted?: boolean,
     createdAt?: string | undefined,
     deleted?: boolean,
+    position?: number | undefined,
   ) {
     // Regla de negocio básica: Una tarea no puede nacer sin título
     if (!title || title.trim() === "") {
@@ -25,6 +27,7 @@ export class Task {
     this.is_completed = isCompleted || false;
     this.created_at = createdAt || undefined;
     this.deleted = deleted || false; // Inicialmente no está eliminada
+    this.position = position;
   }
 
   public complete(): void {

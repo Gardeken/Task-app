@@ -14,19 +14,32 @@ Una aplicación moderna de gestión de tareas construida bajo los principios de 
 - **Swagger UI / OpenAPI 3.0** (Documentación interactiva de la API)
 - **TSX** (Ejecución y monitoreo en tiempo real)
 
-### Frontend (En proceso)
+### Frontend
 
-- **React** + **TypeScript** (Iniciado vía **Vite**)
+- **React** (v19) + **TypeScript** (Iniciado vía **Vite**)
+- **Tailwind CSS v4** (Estilos modernos y optimizados)
+- **@dnd-kit/core & @dnd-kit/sortable** (Sistema de arrastrar y soltar fluido y responsivo)
+- **Lucide React** (Paquete de iconografía)
+- **Axios** (Estrategia de consumo de servicios desacoplada)
 
 ---
 
-## 📐 Arquitectura del Backend
+## 📐 Arquitectura del Sistema
+
+### Backend (Hexagonal + DDD)
 
 El backend está estructurado en capas independientes para garantizar el desacoplamiento tecnológico y facilitar la mantenibilidad y el testing:
 
 - **Dominio (Domain):** Contiene el núcleo del negocio. Las entidades (`Task`) controlan sus propias reglas de estado (completar, soft-delete, restaurar) y definen los puertos/interfaces (`TaskRepository`) sin depender de librerías externas.
 - **Aplicación (Application):** Orquesta los flujos de trabajo a través de **Casos de Uso** individuales (`CreateTask`, `DeleteTask`, `CompleteTask`, etc.).
 - **Infraestructura (Infrastructure):** Detalles técnicos de entrada y salida. Implementa los controladores de Express, los adaptadores de Supabase y la configuración de Swagger.
+
+### Frontend (Servicios + Hooks + UI)
+
+La interfaz se diseñó de manera limpia, abstrayendo el comportamiento asíncrono de los componentes visuales:
+
+- **Client & Services:** Centralizan el uso de Axios y aíslan las llamadas HTTP.
+- **Custom Hooks (`useTasks`):** Manejan el estado de React aplicando **actualizaciones optimistas** (las tareas se reordenan o completan instantáneamente en la interfaz en 0ms, procesando la sincronización en silencio por detrás).
 
 ---
 
@@ -39,13 +52,14 @@ El proyecto cuenta con documentación nativa interactiva que expone todos los en
 ### Endpoints Mapeados en la Documentación:
 
 - `POST /api/tasks` - Crear una nueva tarea.
-- `GET /api/tasks` - Listar todas las tareas activas.
+- `GET /api/tasks` - Listar todas las tareas activas (ordenadas posicionalmente).
+- `PUT /api/tasks/reorder` - Actualizar el orden masivo de la lista mediante una secuencia de IDs (Drag and Drop).
 - `GET /api/tasks/deleted` - Ver tareas en la papelera (Soft Deleted).
 - `GET /api/tasks/completed` - Ver tareas completadas.
 - `GET /api/tasks/:id` - Obtener el detalle de una tarea específica.
 - `DELETE /api/tasks/:id` - Eliminar lógicamente una tarea (Soft Delete).
 - `PUT /api/tasks/:id/restore` - Restaurar una tarea borrada de la papelera.
-- `PUT /api/tasks/:id/complete` - Marcar una tarea como resuelta.
+- `PUT /api/tasks/:id/complete` - Marcar o alternar una tarea como resuelta.
 
 ---
 
@@ -66,6 +80,10 @@ Ejecuta estos comandos en la raíz del backend según la etapa de desarrollo en 
 ### 1. Clonar el repositorio y dependencias
 
 ```bash
+# Clonar el repositorio
+git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
+cd tu-repositorio
+
 # Instalar dependencias del proyecto raíz
 npm install
 ```
