@@ -18,18 +18,11 @@ export const TaskComponent = ({
   onRestore,
   onOpenDetails,
 }: TaskComponentProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: task.id });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useSortable({ id: task.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
   };
 
   return (
@@ -38,12 +31,12 @@ export const TaskComponent = ({
       style={style}
       className={`
         /* 📱 OPTIMIZACIÓN 1: Reducción de padding en móvil (p-3) para maximizar espacio de texto */
-        flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-xl border bg-white transition-all
-        ${
-          isDragging
-            ? "shadow-2xl border-indigo-500 bg-indigo-50/80 backdrop-blur-sm scale-102 z-50 cursor-grabbing"
-            : "shadow-sm border-gray-200/80 hover:shadow-md hover:border-gray-300 cursor-grab"
-        }
+        flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-xl border bg-white 
+                ${
+                  isDragging
+                    ? "shadow-2xl border-indigo-500 bg-indigo-50/80 backdrop-blur-sm scale-102 z-50 cursor-grabbing"
+                    : "shadow-sm border-gray-200/80 hover:shadow-md hover:border-gray-300 cursor-grab"
+                }
       `}
     >
       {/* Checkbox */}
