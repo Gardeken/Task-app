@@ -27,6 +27,17 @@ export const useTasks = () => {
     fetchTasks();
   }, []);
 
+  const refetchTasks = async () => {
+    try {
+      const response = await taskService.getAll();
+      if (response.success) {
+        setTasks(response.data);
+      }
+    } catch (err: any) {
+      setError(err.message || "Error al cargar las tareas");
+    }
+  };
+
   // 2. Crear una nueva tarea
   const createTask = async (title: string, description?: string) => {
     try {
@@ -79,8 +90,33 @@ export const useTasks = () => {
     try {
       setTasks(tasks.filter((t) => t.id !== id));
       await taskService.softDelete(id);
+      refetchTasks();
     } catch (err) {
       fetchTasks();
+    }
+  };
+
+  const restoreTask = async (id: string) => {
+    try {
+      setTasks(tasks.filter((t) => t.id !== id));
+      await taskService.restore(id);
+      refetchTasks();
+    } catch (err) {
+      fetchTasks();
+    }
+  };
+
+  const getDeleteTasks = async () => {
+    setIsLoading(true);
+    try {
+      const response = await taskService.getDeleted();
+      if (response.success) {
+        setTasks(response.data);
+      }
+    } catch (err: any) {
+      setError(err.message || "Error al cargar las tareas");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,8 +127,10 @@ export const useTasks = () => {
     error,
     createTask,
     reorderTasks,
+    restoreTask,
     toggleCompleteTask,
     deleteTask,
+    getDeleteTasks,
     refresh: fetchTasks,
   };
 };

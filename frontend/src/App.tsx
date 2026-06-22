@@ -25,17 +25,28 @@ import { useTasks } from "./hooks/useTask";
 function App() {
   const {
     tasks,
-    setTasks,
     isLoading,
     error,
     createTask,
     reorderTasks,
     toggleCompleteTask,
     deleteTask,
+    restoreTask,
   } = useTasks();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [filter, setFilter] = useState<
+    "all" | "completed" | "deleted" | "pending"
+  >("all");
+
+  const handleSaveTask = async (
+    newTaskData: Omit<Task, "id" | "created_at" | "deleted">,
+  ) => {
+    const { title, description } = newTaskData;
+    await createTask(title, description || ""); // Pasamos parámetros independientes
+    setIsModalOpen(false); // Cerramos el modal tras guardar
+  };
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
@@ -60,16 +71,78 @@ function App() {
     }),
   );
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "deleted") return task.deleted === true;
+    if (filter === "completed")
+      return task.is_completed === true && !task.deleted;
+    if (filter === "pending") return !task.is_completed && !task.deleted;
+    // "all" -> Muestra las tareas activas que NO están completadas ni eliminadas
+    return !task.deleted;
+  });
+
   return (
     <div className="flex flex-col m-auto h-screen w-1/2 items-center justify-center gap-2 text-2xl font-bold">
-      <div
-        onClick={() => {
-          setIsModalOpen(true);
-        }}
-        className="self-end items-center gap-2 flex bg-blue-500 text-white p-2 rounded-md cursor-pointer hover:bg-blue-600 transition-colors"
-      >
-        <Plus className="w-4 h-4" />
+      <div className="flex justify-between items-center w-full mt-4 mb-2">
+        {/* 🎛️ Grupo de Filtros */}
+        <div className="flex gap-2 text-sm font-medium select-none">
+          <button
+            onClick={() => setFilter("all")}
+            className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+              filter === "all"
+                ? "bg-slate-800 text-white"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+            }`}
+          >
+            Todas
+          </button>
+
+          <button
+            onClick={() => setFilter("pending")}
+            className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+              filter === "pending"
+                ? "bg-slate-800 text-white"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+            }`}
+          >
+            Pendientes
+          </button>
+
+          <button
+            onClick={() => setFilter("completed")}
+            className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+              filter === "completed"
+                ? "bg-green-600 text-white"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+            }`}
+          >
+            Completadas
+          </button>
+
+          <button
+            onClick={() => setFilter("deleted")}
+            className={`px-3 py-2 rounded-lg transition-colors cursor-pointer ${
+              filter === "deleted"
+                ? "bg-red-500 text-white"
+                : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+            }`}
+          >
+            Papelera
+          </button>
+        </div>
+
+        {/* ➕ Botón Añadir Tarea */}
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-blue-500 text-white p-2.5 rounded-xl cursor-pointer hover:bg-blue-600 transition-colors shadow-sm"
+        >
+          <Plus className="w-5 h-5" />
+        </button>
       </div>
+      {error && (
+        <div className="w-full text-xs text-red-600 bg-red-50 p-2 rounded-xl text-center font-normal border border-red-100">
+          {error}
+        </div>
+      )}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -87,15 +160,16 @@ function App() {
             </div>
           ) : (
             <SortableContext
-              items={tasks}
+              items={filteredTasks}
               strategy={verticalListSortingStrategy}
             >
-              {tasks.map((t) => (
+              {filteredTasks.map((t) => (
                 <TaskComponent
                   key={t.id}
                   task={t}
-                  onToggleComplete={toggleCompleteTask} // 🚀 Conectado al Hook
-                  onDelete={deleteTask} // 🚀 Conectado al Hook
+                  onToggleComplete={toggleCompleteTask}
+                  onDelete={deleteTask}
+                  onRestore={restoreTask}
                   onOpenDetails={(task) => setSelectedTask(task)}
                 />
               ))}
@@ -103,6 +177,12 @@ function App() {
           )}
         </div>
       </DndContext>
+
+      <CreateTaskModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleSaveTask}
+      />
 
       <ViewTaskModal
         task={selectedTask}

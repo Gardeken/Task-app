@@ -12,8 +12,16 @@ export const taskService = {
   /**
    * Obtiene todas las tareas activas ordenadas por posición
    */
-  getAll: async (): Promise<ApiResponse<Task[]>> => {
+  getActive: async (): Promise<ApiResponse<Task[]>> => {
     const { data } = await apiClient.get<ApiResponse<Task[]>>("/tasks/active");
+    return data;
+  },
+
+  /**
+   * Obtiene todas las tareas ordenadas por posición
+   */
+  getAll: async (): Promise<ApiResponse<Task[]>> => {
+    const { data } = await apiClient.get<ApiResponse<Task[]>>("/tasks");
     return data;
   },
 

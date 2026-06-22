@@ -1,12 +1,13 @@
 import type { Task } from "../types/tasks";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Eye, GripVertical, Trash } from "lucide-react"; // Librería de iconos que instalamos
+import { ArchiveRestore, Eye, GripVertical, Trash } from "lucide-react"; // Librería de iconos que instalamos
 
 interface TaskComponentProps {
   task: Task;
   onToggleComplete: (id: string) => void; // 👈 Agregamos la función para avisar al padre
   onDelete: (id: string) => void; // 👈 Aprovechamos de conectar el botón de borrar
+  onRestore: (id: string) => void;
   onOpenDetails: (task: Task) => void; // 👈 Agregamos la función para abrir los detalles de la tarea
 }
 
@@ -14,6 +15,7 @@ export const TaskComponent = ({
   task,
   onToggleComplete,
   onDelete,
+  onRestore,
   onOpenDetails,
 }: TaskComponentProps) => {
   const {
@@ -88,10 +90,18 @@ export const TaskComponent = ({
 
       <div className="flex items-center gap-2 ml-4">
         {/* Aquí podríamos añadir botones de acción como editar o eliminar */}
-        <Trash
-          className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer"
-          onClick={() => onDelete(task.id)}
-        />
+
+        {task.deleted ? (
+          <ArchiveRestore
+            className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer"
+            onClick={() => onRestore(task.id)}
+          />
+        ) : (
+          <Trash
+            className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer"
+            onClick={() => onDelete(task.id)}
+          />
+        )}
         <Eye
           className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-pointer"
           onClick={() => onOpenDetails(task)}
