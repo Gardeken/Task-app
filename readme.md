@@ -49,6 +49,18 @@ El proyecto cuenta con documentación nativa interactiva que expone todos los en
 
 ---
 
+## 💻 Comandos del Proyecto (Scripts)
+
+Ejecuta estos comandos en la raíz del backend según la etapa de desarrollo en la que te encuentres:
+
+| Comando         | Descripción                                                                                               |
+| :-------------- | :-------------------------------------------------------------------------------------------------------- |
+| `npm run dev`   | Inicia el entorno de desarrollo usando `tsx watch` e inyectando las variables del `.env`.                 |
+| `npm run build` | Compila todo el proyecto TypeScript (`tsc`) y genera el código JavaScript nativo en la carpeta `/dist`.   |
+| `npm start`     | Arranca el servidor de producción ejecutando directamente los archivos compilados (`node dist/index.js`). |
+
+---
+
 ## 🚀 Instalación y Configuración
 
 ### 1. Clonar el repositorio y dependencias
