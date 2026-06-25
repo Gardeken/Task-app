@@ -13,6 +13,7 @@ import type { Task } from "./types/tasks";
 import { TaskComponent } from "./Components/TaskComponent";
 import { CreateTaskModal } from "./Components/CreateTaskComponent";
 import { ViewTaskModal } from "./Components/ViewTaskComponent";
+import { UpdateTaskModal } from "./Components/EditTaskComponent";
 import {
   arrayMove,
   SortableContext,
@@ -32,9 +33,11 @@ function App() {
     toggleCompleteTask,
     deleteTask,
     restoreTask,
+    editTask,
   } = useTasks();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEditTask, setSelectedEditTask] = useState<Task | null>(null);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [filter, setFilter] = useState<
     "all" | "completed" | "deleted" | "pending"
@@ -46,6 +49,11 @@ function App() {
     const { title, description } = newTaskData;
     await createTask(title, description || "");
     setIsModalOpen(false);
+  };
+
+  const handleEditTask = async (task: Task) => {
+    setSelectedEditTask(null);
+    await editTask(task);
   };
 
   const handleDragEnd = (event: any) => {
@@ -171,6 +179,7 @@ function App() {
                   onToggleComplete={toggleCompleteTask}
                   onDelete={deleteTask}
                   onRestore={restoreTask}
+                  onEdit={(task) => setSelectedEditTask(task)}
                   onOpenDetails={(task) => setSelectedTask(task)}
                 />
               ))}
@@ -178,6 +187,14 @@ function App() {
           )}
         </div>
       </DndContext>
+
+      <UpdateTaskModal
+        onClose={() => {
+          setSelectedEditTask(null);
+        }}
+        task={selectedEditTask}
+        onUpdate={handleEditTask}
+      />
 
       <CreateTaskModal
         isOpen={isModalOpen}

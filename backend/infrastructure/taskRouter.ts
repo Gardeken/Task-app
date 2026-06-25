@@ -20,6 +20,8 @@ import { CompleteTask } from "../aplication/use_cases/CompleteTask.js";
 import { CompleteTaskController } from "./controllers/CompleteTaskController.js";
 import { ReorderTask } from "../aplication/use_cases/ReorderTask.js";
 import { ReorderTaskController } from "./controllers/ReorderTaskController.js";
+import { EditTask } from "../aplication/use_cases/EditTask.js";
+import { EditTaskController } from "./controllers/EditTaskController.js";
 
 const taskRouter = Router();
 
@@ -36,6 +38,7 @@ const deleteTaskUseCase = new DeleteTask(taskRepository);
 const restoreTaskUseCase = new RestoreTask(taskRepository);
 const completeTaskUseCase = new CompleteTask(taskRepository);
 const reorderTaskUseCase = new ReorderTask(taskRepository);
+const editTaskUseCase = new EditTask(taskRepository);
 
 // 3. Instanciamos el controlador y le pasamos el caso de uso
 const createTaskController = new CreateTaskController(createTaskUseCase);
@@ -51,9 +54,14 @@ const deleteTaskController = new DeleteTaskController(deleteTaskUseCase);
 const restoreTaskController = new RestoreTaskController(restoreTaskUseCase);
 const completeTaskController = new CompleteTaskController(completeTaskUseCase);
 const reorderTaskController = new ReorderTaskController(reorderTaskUseCase);
+const editTaskController = new EditTaskController(editTaskUseCase);
+
 // 4. Definimos la ruta de Express
 taskRouter.post("/tasks", (req, res) => createTaskController.handle(req, res));
 taskRouter.get("/tasks", (req, res) => getAllTaskController.handle(req, res));
+taskRouter.put("/tasks", (req, res) => {
+  editTaskController.handle(req, res);
+});
 taskRouter.get("/tasks/deleted", (req, res) =>
   getDeleteTaskController.handle(req, res),
 );

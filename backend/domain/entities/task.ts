@@ -49,4 +49,12 @@ export class Task {
   public restore(): void {
     this.deleted = false;
   }
+
+  public edit(): void {
+    if (this.deleted) {
+      throw new Error("No se puede editar una tarea eliminada");
+    } else if (this.is_completed) {
+      throw new Error("No puedes editar una tarea completada");
+    }
+  }
 }

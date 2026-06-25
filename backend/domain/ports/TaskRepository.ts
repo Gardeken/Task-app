@@ -28,4 +28,7 @@ export interface TaskRepository {
 
   //9. Reordenar tareas (actualizar la posición de una tarea)
   reorder(orderedIds: string[]): Promise<void>;
+
+  //10. Editar una tarea
+  edit(task: Task): Promise<void>;
 }

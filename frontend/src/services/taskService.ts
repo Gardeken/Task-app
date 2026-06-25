@@ -93,4 +93,11 @@ export const taskService = {
     );
     return data;
   },
+
+  edit: async (task: Task): Promise<ApiResponse<Task>> => {
+    const { data } = await apiClient.put<ApiResponse<Task>>(`/tasks`, {
+      task,
+    });
+    return data;
+  },
 };

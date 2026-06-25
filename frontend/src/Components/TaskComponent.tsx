@@ -1,13 +1,20 @@
 import type { Task } from "../types/tasks";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ArchiveRestore, Eye, GripVertical, Trash } from "lucide-react";
+import {
+  ArchiveRestore,
+  Eye,
+  GripVertical,
+  Trash,
+  EditIcon,
+} from "lucide-react";
 
 interface TaskComponentProps {
   task: Task;
   onToggleComplete: (id: string) => void;
   onDelete: (id: string) => void;
   onRestore: (id: string) => void;
+  onEdit: (task: Task) => void;
   onOpenDetails: (task: Task) => void;
 }
 
@@ -15,6 +22,7 @@ export const TaskComponent = ({
   task,
   onToggleComplete,
   onDelete,
+  onEdit,
   onRestore,
   onOpenDetails,
 }: TaskComponentProps) => {
@@ -115,6 +123,13 @@ export const TaskComponent = ({
           title="Ver detalles"
         >
           <Eye className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => onEdit(task)}
+          className="p-1 text-gray-400 hover:text-blue-500 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
+          title="Editar tareas"
+        >
+          <EditIcon className="w-4 h-4" />
         </button>
       </div>
     </div>

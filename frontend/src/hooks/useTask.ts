@@ -106,6 +106,20 @@ export const useTasks = () => {
     }
   };
 
+  const editTask = async (task: Task) => {
+    const previous = [...tasks];
+
+    // Cambiamos la UI primero
+    setTasks((prev) => prev.map((t) => (t.id === task.id ? task : t)));
+
+    try {
+      await taskService.edit(task);
+    } catch (error) {
+      setTasks(previous); // Revertimos si falla
+      // setErrorMessage("Error al sincronizar...");
+    }
+  };
+
   const getDeleteTasks = async () => {
     setIsLoading(true);
     try {
@@ -127,6 +141,7 @@ export const useTasks = () => {
     error,
     createTask,
     reorderTasks,
+    editTask,
     restoreTask,
     toggleCompleteTask,
     deleteTask,

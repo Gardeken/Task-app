@@ -192,4 +192,15 @@ export class SupabaseTaskRepository implements TaskRepository {
       );
     }
   }
+
+  // 10. Editar tareas
+  async edit(task: Task): Promise<void> {
+    const { error } = await supabase
+      .from("tasks")
+      .update({ title: task.title, description: task.description })
+      .eq("id", task.id);
+    if (error) {
+      throw new Error(`Error editing task: ${error.message}`);
+    }
+  }
 }
