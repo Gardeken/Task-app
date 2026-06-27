@@ -2,6 +2,7 @@
 
 import swaggerJSDoc from "swagger-jsdoc";
 import { taskSwaggerDocs } from "../taskDocs.js";
+const API_BASE_URL = process.env.VITE_API_URL || "http://localhost:3000";
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -14,7 +15,7 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: "http://localhost:3000/api",
+        url: `${API_BASE_URL}/api`,
         description: "Servidor Local de Desarrollo",
       },
     ],

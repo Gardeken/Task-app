@@ -3,6 +3,7 @@
 export const taskSwaggerDocs = {
   components: {
     schemas: {
+      // 1. Esquema base de una Tarea (Modelo del dominio)
       Task: {
         type: "object",
         properties: {
@@ -31,6 +32,43 @@ export const taskSwaggerDocs = {
           deleted: { type: "boolean", example: false },
         },
       },
+
+      // 🎯 NUEVO: Esquema con los campos específicos que viajan al editar
+      TaskUpdateFields: {
+        type: "object",
+        required: ["id"], // El ID es obligatorio para saber qué fila impactar en Supabase
+        properties: {
+          id: {
+            type: "string",
+            format: "uuid",
+            description: "UUID de la tarea a modificar",
+            example: "5a74466c-c4b4-472c-b6e1-9932afd0e334",
+          },
+          title: {
+            type: "string",
+            description: "Nuevo título para la tarea",
+            example: "Estructurar el Repositorio",
+          },
+          description: {
+            type: "string",
+            description: "Nueva descripción detallada de la tarea",
+            example: "Terminar mis tareas del dia",
+          },
+        },
+      },
+
+      // 🎯 NUEVO: Envoltorio raíz "task" exigido por tu Body Request de pruebas
+      EditTaskRequest: {
+        type: "object",
+        required: ["task"],
+        properties: {
+          task: {
+            $ref: "#/components/schemas/TaskUpdateFields",
+          },
+        },
+      },
+
+      // Respuestas genéricas de la API
       TaskResponse: {
         type: "object",
         properties: {
@@ -49,6 +87,50 @@ export const taskSwaggerDocs = {
   },
   paths: {
     "/tasks": {
+      // ➕ ENDPOINT AGREGADO: Editar Tarea
+      put: {
+        summary: "Editar una tarea existente",
+        description:
+          "Actualiza las propiedades de una tarea (como el título o la descripción) en Supabase buscando por su ID interno.",
+        tags: ["Tasks"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/EditTaskRequest",
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Tarea actualizada correctamente en el servidor",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/TaskResponse" },
+              },
+            },
+          },
+          400: {
+            description:
+              "Petición inválida (Falta el objeto raíz 'task' o el campo 'id')",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+              },
+            },
+          },
+          404: {
+            description: "No se encontró la tarea especificada",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/ErrorResponse" },
+              },
+            },
+          },
+        },
+      },
       post: {
         summary: "Crear una nueva tarea",
         tags: ["Tasks"],

@@ -54,6 +54,7 @@ El proyecto cuenta con documentación nativa interactiva que expone todos los en
 - `POST /api/tasks` - Crear una nueva tarea.
 - `GET /api/tasks` - Listar todas las tareas activas (ordenadas posicionalmente).
 - `PUT /api/tasks/reorder` - Actualizar el orden masivo de la lista mediante una secuencia de IDs (Drag and Drop).
+- `PUT /api/tasks` - Editar el título o descripción de alguna tarea.
 - `GET /api/tasks/deleted` - Ver tareas en la papelera (Soft Deleted).
 - `GET /api/tasks/completed` - Ver tareas completadas.
 - `GET /api/tasks/:id` - Obtener el detalle de una tarea específica.
@@ -81,7 +82,7 @@ Ejecuta estos comandos en la raíz del backend según la etapa de desarrollo en 
 
 ```bash
 # Clonar el repositorio
-git clone [https://github.com/tu-usuario/tu-repositorio.git](https://github.com/tu-usuario/tu-repositorio.git)
+git clone [https://github.com/Gardeken/Task-app](https://github.com/Gardeken/Task-app)
 cd tu-repositorio
 
 # Instalar dependencias del proyecto raíz
