@@ -2,7 +2,7 @@
 
 import swaggerJSDoc from "swagger-jsdoc";
 import { taskSwaggerDocs } from "../taskDocs.js";
-const API_BASE_URL = process.env.VITE_API_URL || "http://localhost:3000";
+const API_BASE_URL = process.env.BACKEND_URL;
 
 const options: swaggerJSDoc.Options = {
   definition: {
