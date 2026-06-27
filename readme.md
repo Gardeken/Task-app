@@ -2,7 +2,7 @@
 
 Una aplicación moderna de gestión de tareas construida bajo los principios de la **Arquitectura Hexagonal (Clean Architecture)** y **Domain-Driven Design (DDD)** en el backend, preparada para una integración fluida con un cliente SPA en el frontend.
 
-Url de producción: https://task-p917wniq9-gardekens-projects.vercel.app
+Url de producción: https://task-app-bice-one.vercel.app
 
 ---
 
